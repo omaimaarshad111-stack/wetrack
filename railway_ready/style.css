@@ -1,0 +1,497 @@
+/* ===========================
+   RESET & GLOBALS
+=========================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #b11226;      /* Karachi Red */
+    --secondary-color: #e11d2e;    /* Action Red */
+    --accent-color: #f87171;
+
+    --background-main: #ffffff;
+    --background-soft: #f5f5f5;
+
+    --text-dark: #1f2933;
+    --text-gray: #6b7280;
+
+    --card-bg: #ffffff;
+    --border-light: #e5e7eb;
+
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ===========================
+   BODY
+=========================== */
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--background-soft);
+    color: var(--text-dark);
+    min-height: 100vh;
+}
+
+/* ===========================
+   HEADER
+=========================== */
+header {
+    background-color: var(--primary-color);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+}
+
+/* ===========================
+   NAVIGATION
+=========================== */
+.nav-btn {
+    background: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 0.45rem 1.4rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background-color: white;
+    color: var(--primary-color);
+}
+
+/* ===========================
+   MAIN
+=========================== */
+main {
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.page.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===========================
+   HERO
+=========================== */
+.hero {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.hero h2 {
+    font-size: 2.4rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.15rem;
+    color: var(--text-gray);
+    max-width: 650px;
+    margin: 0 auto 3rem;
+}
+
+/* ===========================
+   FEATURE CARDS
+=========================== */
+.buttons-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+}
+
+.feature-card {
+    background-color: var(--card-bg);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow);
+}
+
+.feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+}
+
+.feature-card p {
+    color: var(--text-gray);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+}
+
+.feature-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.feature-btn:hover {
+    background-color: #be123c;
+}
+
+/* ===========================
+   PAGE HEADER
+=========================== */
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.page-header h2 {
+    font-size: 2rem;
+}
+
+.back-btn {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+/* ===========================
+   CONTROLS
+=========================== */
+.controls {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.search-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.input-group {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+}
+
+label {
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+    display: block;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-light);
+    font-size: 1rem;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+}
+
+.search-btn {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* ===========================
+   RESULTS + MAP
+=========================== */
+.results-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    height: 600px;
+}
+
+@media (max-width: 1024px) {
+    .results-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.results,
+.map-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.results {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.map-container,
+#map,
+#bus-map {
+    height: 600px;
+}
+
+/* ===========================
+   TRIP PANEL
+=========================== */
+.trip-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.clear-btn {
+    background: rgba(177, 18, 38, 0.1);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* ===========================
+   LIVE TRACKING
+=========================== */
+.live-tracking {
+    border: 2px solid rgba(177, 18, 38, 0.2);
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.eta-badge {
+    background: var(--secondary-color);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+.progress-track {
+    height: 10px;
+    background: #f1f1f1;
+    border-radius: 5px;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    width: 0%;
+}
+
+.bus-marker {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    color: var(--primary-color);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+/* ===========================
+   STOPS & ROUTES
+=========================== */
+.stop,
+.stop-sequence {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* ===========================
+   RESPONSIVE
+=========================== */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+    }
+
+    .nav-btn {
+        margin: 0.4rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+}
+
+/* Enhanced Map Styles */
+.map-container {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#map, #bus-map {
+    height: 100%;
+    min-height: 500px;
+    border-radius: 10px;
+}
+
+/* Map controls */
+.distance-control {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+}
+
+/* Loading overlay for map */
+.map-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    border-radius: 10px;
+}
+
+/* Route info window */
+.route-info {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+}
+
+.route-info h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+/* Bus stop markers */
+.leaflet-marker-icon {
+    transition: transform 0.3s ease;
+}
+
+.leaflet-marker-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Popup styling */
+.leaflet-popup-content {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.leaflet-popup-content-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Progress on map */
+.route-progress {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    font-size: 12px;
+}
+
+/* Add to style.css */
+.suggestions {
+    position: absolute;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+    margin-top: 2px;
+}
+
+.suggestion-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-light);
+    transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+    background-color: rgba(177, 18, 38, 0.1);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.input-group {
+    position: relative;
+}

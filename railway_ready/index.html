@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WeTrack - Karachi Bus Routes</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+<header>
+    <h1 class="logo">WeTrack🚌</h1>
+    <nav>
+        <button onclick="showHome()" class="nav-btn active">Home</button>
+        <button onclick="showRouteFinder()" class="nav-btn">Find Route</button>  <!-- ADD THIS! -->
+        <button onclick="showBusInfo()" class="nav-btn">Bus Info</button>
+    </nav>
+</header>
+    <!-- Main Content -->
+    <main>
+        <!-- Home Page -->
+        <div id="home-page" class="page active">
+            <div class="hero">
+                <h2>Karachi Bus Route System</h2>
+                <p>Find the best bus routes across Karachi with real-time information</p>
+                
+                <div class="buttons-container">
+                    <div class="feature-card" onclick="showRouteFinder()">
+                        <div class="feature-icon">🚌</div>
+                        <h3>Find Your Bus</h3>
+                        <p>Enter your starting point and destination to find the best bus route</p>
+                        <button class="feature-btn">Find Route</button>
+                    </div>
+                    
+                    <div class="feature-card" onclick="showBusInfo()">
+                        <div class="feature-icon">ℹ️</div>
+                        <h3>Bus Information</h3>
+                        <p>View complete route information for any bus including all stops</p>
+                        <button class="feature-btn">View Bus Info</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Route Finder Page -->
+<div id="route-finder" class="page">
+    <div class="page-header">
+        <button onclick="showHome()" class="back-btn">← Back</button>
+        <h2>Find Your Bus Route</h2>
+    </div>
+    
+    <div class="controls">
+        <div class="search-container">
+            <div class="input-group">
+                <label for="from-stop">From:</label>
+                <input type="text" id="from-stop" placeholder="Enter starting stop...">
+                <div id="from-suggestions" class="suggestions"></div>
+            </div>
+            
+            <div class="input-group">
+                <label for="to-stop">To:</label>
+                <input type="text" id="to-stop" placeholder="Enter destination...">
+                <div id="to-suggestions" class="suggestions"></div>
+            </div>
+            
+            <button onclick="findRoute()" class="search-btn">Find Route</button>
+        </div>
+    </div>
+    
+    <div class="results-container">
+        <!-- Left Panel: Trip Details & Live Tracking -->
+        <div id="trip-panel" class="results" style="display: none;">
+            <div class="trip-header">
+                <h3>Your Route</h3>
+                <button onclick="clearTrip()" class="clear-btn">Clear</button>
+            </div>
+            
+            <!-- Trip Instructions -->
+            <div id="trip-instructions" class="trip-instructions"></div>
+            
+            <!-- Live Bus Tracking -->
+            <div id="live-tracking" class="live-tracking" style="display: none;">
+                <div class="tracking-header">
+                    <h4>🚌 Live Bus Location</h4>
+                    <div id="bus-eta" class="eta-badge">ETA: --</div>
+                </div>
+                
+                <div class="bus-info">
+                    <div class="info-row">
+                        <span>Current Location:</span>
+                        <span id="current-stop">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Next Stop:</span>
+                        <span id="next-stop">--</span>
+                    </div>
+                    <div class="info-row">
+                        <span>Passengers:</span>
+                        <span id="passenger-count">--</span>
+                    </div>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-labels">
+                        <span id="start-stop">--</span>
+                        <span id="end-stop">--</span>
+                    </div>
+                    <div class="progress-track">
+                        <div id="progress-bar" class="progress-fill"></div>
+                        <div id="bus-marker" class="bus-marker">🚌</div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progress-percent">0%</span> to next stop
+                    </div>
+                </div>
+                
+                <!-- Simple Route Visualization -->
+                <div class="route-visual">
+                    <div class="route-stops">
+                        <div class="stop" id="visual-start">Start</div>
+                        <div class="stop-line"></div>
+                        <div class="stop" id="visual-end">End</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Total Travel Time -->
+            <div id="total-time" class="total-time-card" style="display: none;">
+                <div class="time-icon">⏱️</div>
+                <div class="time-content">
+                    <div class="time-label">Total travel time:</div>
+                    <div class="time-value" id="total-time-value">--</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Panel: Map -->
+        <div id="map-container" class="map-container">
+            <div id="map"></div>
+        </div>
+    </div>
+</div>
+
+        <!-- Bus Information Page -->
+        <div id="bus-info" class="page">
+            <div class="page-header">
+                <button onclick="showHome()" class="back-btn">← Back</button>
+                <h2>Bus Route Information</h2>
+            </div>
+            
+            <div class="controls">
+                <div class="search-container">
+                    <label for="bus-select">Select Bus:</label>
+                    <select id="bus-select">
+                        <option value="">Choose a bus...</option>
+                    </select>
+                    <button onclick="loadBusRoute()" class="search-btn">Load Route</button>
+                </div>
+            </div>
+            
+            <div class="results-container">
+                <div id="bus-details" class="results"></div>
+                <div id="bus-map-container" class="map-container">
+                    <div id="bus-map"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

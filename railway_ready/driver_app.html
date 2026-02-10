@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WeTrack Driver - Live Location Tracking System">
+    <title>WeTrack Driver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <style>
+        :root {
+            --primary-color: #b11226;
+            --primary-hover: #e11d2e;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --gray-light: #f8f9fa;
+            --gray: #666;
+            --gray-dark: #212529;
+            --border-radius: 10px;
+            --box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #f5f5f5; 
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: var(--primary-color);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: var(--box-shadow);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .card h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: var(--gray-dark);
+        }
+        
+        .status {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: var(--gray-light);
+            border-radius: 5px;
+        }
+        
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .btn:hover { 
+            background: var(--primary-hover); 
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-success { 
+            background: var(--success); 
+        }
+        
+        .btn-warning { 
+            background: var(--warning); 
+            color: var(--gray-dark); 
+        }
+        
+        .btn-danger { 
+            background: var(--danger); 
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--gray-dark);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            font-family: inherit;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(177, 18, 38, 0.1);
+        }
+        
+        .hidden { 
+            display: none !important; 
+        }
+        
+        .location-info {
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 5px;
+            background: var(--gray-light);
+            padding: 10px;
+            border-radius: 5px;
+            line-height: 1.8;
+        }
+        
+        .active { 
+            color: var(--success); 
+            font-weight: bold;
+        }
+        
+        .inactive { 
+            color: var(--danger); 
+        }
+        
+        .bus-info {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--gray);
+        }
+        
+        .demo-note {
+            margin-top: 15px;
+            text-align: center;
+            color: var(--gray);
+            font-size: 12px;
+        }
+        
+        .debug-info {
+            font-family: monospace;
+            font-size: 12px;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        
+        .slider-container input[type="range"] {
+            flex: 1;
+        }
+        
+        .slider-container span {
+            min-width: 40px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚌 WeTrack Driver</h1>
+            <p>Live Location Tracking System</p>
+        </div>
+        
+        <!-- Login Section -->
+        <section id="login-section">
+            <div class="card">
+                <h2>Driver Login</h2>
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" placeholder="03121234567" pattern="[0-9]{11}" required>
+                </div>
+                <div class="input-group">
+                    <label for="bus-no">Bus Route</label>
+                    <select id="bus-no" required>
+                        <option value="">Select Bus Route</option>
+                        <option value="Route 1">Route 1 (Downtown)</option>
+                        <option value="Route 2">Route 2 (Suburban)</option>
+                        <option value="Route 3">Route 3 (Express)</option>
+                        <option value="Route 4">Route 4 (Airport)</option>
+                        <option value="EV-1">EV-1 (Electric)</option>
+                        <option value="EV-2">EV-2 (Electric)</option>
+                    </select>
+                </div>
+                <button class="btn" id="login-btn" onclick="login()">Login / Register</button>
+                
+                <div class="demo-note">
+                    <p><strong>Demo Credentials:</strong></p>
+                    <p>Phone: 03121234567 (Ali Khan - Route 1)</p>
+                    <p>Phone: 03211234568 (Ahmed Raza - Route 2)</p>
+                    <p style="margin-top: 10px; color: var(--primary-color);">
+                        Note: Enter your name when prompted
+                    </p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Main Dashboard -->
+        <section id="dashboard" class="hidden">
+            <!-- Driver Status Card -->
+            <div class="card">
+                <h2>Driver Status</h2>
+                <div class="status">
+                    <span>Driver:</span>
+                    <span id="driver-name">--</span>
+                </div>
+                <div class="status">
+                    <span>Bus:</span>
+                    <span id="bus-info-display">--</span>
+                </div>
+                <div class="status">
+                    <span>Tracking:</span>
+                    <span id="tracking-status" class="inactive">INACTIVE</span>
+                </div>
+                <div class="location-info" id="last-update">
+                    Last update: Never
+                </div>
+            </div>
+            
+            <!-- Location Tracking Card -->
+            <div class="card">
+                <h2>Location Tracking</h2>
+                <div class="location-info" id="current-location">
+                    Latitude: --<br>
+                    Longitude: --<br>
+                    Accuracy: -- meters<br>
+                    Speed: -- km/h
+                </div>
+                <div id="tracking-controls">
+                    <button class="btn btn-success" id="start-tracking" onclick="startTracking()">▶ Start Tracking</button>
+                    <button class="btn btn-warning hidden" id="stop-tracking" onclick="stopTracking()">⏸ Stop Tracking</button>
+                </div>
+                <div class="location-info">
+                    <small>Updates every 10 seconds when active</small><br>
+                    <small>Allow location access when browser asks</small>
+                </div>
+            </div>
+            
+            <!-- Bus Information Card -->
+            <div class="card">
+                <h2>Bus Information</h2>
+                <div class="input-group">
+                    <label for="passenger-count">Passenger Count</label>
+                    <div class="slider-container">
+                        <input type="range" id="passenger-count" min="0" max="100" value="25">
+                        <span id="passenger-value">25</span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="bus-status">Bus Status</label>
+                    <select id="bus-status">
+                        <option value="moving">Moving</option>
+                        <option value="stopped">Stopped at Stop</option>
+                        <option value="delayed">Delayed</option>
+                        <option value="breakdown">Breakdown</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+                <button class="btn" id="update-status-btn" onclick="updateBusStatus()">Update Bus Status</button>
+            </div>
+            
+            <!-- Quick Actions Card -->
+            <div class="card">
+                <h2>Quick Actions</h2>
+                <button class="btn" onclick="takeBreak()">☕ Take 15-min Break</button>
+                <button class="btn btn-danger" onclick="endShift()">⏹ End Shift & Logout</button>
+            </div>
+            
+            <!-- Debug Information Card -->
+            <div class="card">
+                <h3>Debug Information</h3>
+                <div class="location-info debug-info">
+                    Driver ID: <span id="debug-driver-id">--</span><br>
+                    Bus ID: <span id="debug-bus-id">--</span><br>
+                    Session: <span id="debug-session">Not started</span><br>
+                    API Status: <span id="debug-api-status">Ready</span>
+                </div>
+                <button class="btn" onclick="showConsole()" style="margin-top: 10px;">Show Console Logs</button>
+                <button class="btn" onclick="testAPI()" style="margin-top: 5px;">Test API Connection</button>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        class DriverApp {
+            constructor() {
+                this.driverId = null;
+                this.busId = null;
+                this.driverName = null;
+                this.busNo = null;
+                this.trackingInterval = null;
+                this.isTracking = false;
+                this.watchId = null;
+                this.authToken = localStorage.getItem('driver_token');
+                this.apiBase = 'secure_driver_api.php';
+                
+                this.initElements();
+                this.bindEvents();
+            }
+            
+            initElements() {
+                this.phoneInput = document.getElementById('phone');
+                this.busSelect = document.getElementById('bus-no');
+                this.loginBtn = document.getElementById('login-btn');
+                this.driverNameSpan = document.getElementById('driver-name');
+                this.busInfoSpan = document.getElementById('bus-info-display');
+                this.trackingStatusSpan = document.getElementById('tracking-status');
+                this.lastUpdateSpan = document.getElementById('last-update');
+                this.currentLocationDiv = document.getElementById('current-location');
+                this.passengerSlider = document.getElementById('passenger-count');
+                this.passengerValueSpan = document.getElementById('passenger-value');
+                this.debugDriverIdSpan = document.getElementById('debug-driver-id');
+                this.debugBusIdSpan = document.getElementById('debug-bus-id');
+                this.debugApiStatusSpan = document.getElementById('debug-api-status');
+                this.debugSessionSpan = document.getElementById('debug-session');
+            }
+            
+            bindEvents() {
+                this.passengerSlider.addEventListener('input', () => {
+                    this.passengerValueSpan.textContent = this.passengerSlider.value;
+                });
+                
+                // Auto-fill demo data for testing
+                this.phoneInput.value = '03121234567';
+                this.busSelect.value = 'Route 1';
+                
+                // Check for existing session
+                this.checkExistingSession();
+            }
+            
+            async checkExistingSession() {
+                const savedDriverId = localStorage.getItem('driver_id');
+                const savedToken = localStorage.getItem('driver_token');
+                
+                if (savedDriverId && savedToken) {
+                    try {
+                        this.debugApiStatusSpan.textContent = 'Restoring session...';
+                        // Verify token is still valid
+                        const response = await this.apiRequest('verify_session');
+                        
+                        if (response.success) {
+                            this.driverId = savedDriverId;
+                            this.driverName = localStorage.getItem('driver_name');
+                            this.busNo = localStorage.getItem('bus_no');
+                            this.authToken = savedToken;
+                            this.showDashboard();
+                            this.debugApiStatusSpan.textContent = 'Session restored';
+                        } else {
+                            this.clearSession();
+                        }
+                    } catch (error) {
+                        this.clearSession();
+                    }
+                }
+            }
+            
+            async login() {
+                const phone = this.phoneInput.value.trim();
+                const selectedBusNo = this.busSelect.value;
+                
+                if (!this.validatePhone(phone)) {
+                    alert('Please enter a valid 11-digit phone number');
+                    return;
+                }
+                
+                if (!selectedBusNo) {
+                    alert('Please select your bus route');
+                    return;
+                }
+                
+                const enteredName = prompt("Enter your full name:");
+                if (!enteredName?.trim()) {
+                    alert('Name is required');
+                    return;
+                }
+                
+                this.setLoading(true);
+                
+                try {
+                    const data = await this.apiRequest('register', {
+                        phone_number: phone,
+                        driver_name: enteredName.trim(),
+                        bus_no: selectedBusNo
+                    });
+                    
+                    if (data.success) {
+                        this.driverId = data.driver_id;
+                        this.busId = data.bus_id;
+                        this.driverName = enteredName.trim();
+                        this.busNo = selectedBusNo;
+                        this.authToken = data.token;
+                        
+                        // Save to localStorage
+                        localStorage.setItem('driver_token', this.authToken);
+                        localStorage.setItem('driver_id', this.driverId);
+                        localStorage.setItem('driver_name', this.driverName);
+                        localStorage.setItem('bus_no', this.busNo);
+                        
+                        this.showDashboard();
+                        this.updateDebugInfo();
+                        alert('✅ Login successful!');
+                    } else {
+                        throw new Error(data.message || 'Login failed');
+                    }
+                } catch (error) {
+                    console.error('Login error:', error);
+                    
+                    // Fallback to demo mode
+                    if (confirm('API unavailable. Continue in demo mode?')) {
+                        this.useDemoMode(phone, selectedBusNo, enteredName);
+                        this.showDashboard();
+                    }
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+            
+            useDemoMode(phone, busNo, name) {
+                this.driverId = 'DEMO-' + Math.floor(Math.random() * 10000);
+                this.busId = 'DEMO-001';
+                this.driverName = name;
+                this.busNo = busNo;
+                this.authToken = null;
+                this.debugApiStatusSpan.textContent = 'Demo Mode';
+                alert('⚠️ Running in Demo Mode');
+            }
+            
+            showDashboard() {
+                document.getElementById('login-section').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                
+                this.driverNameSpan.textContent = this.driverName;
+                this.busInfoSpan.textContent = `${this.busNo} (${this.busNo.includes('EV') ? 'Electric' : 'Regular'})`;
+                
+                this.updateDebugInfo();
+            }
+            
+            updateDebugInfo() {
+                this.debugDriverIdSpan.textContent = this.driverId || '--';
+                this.debugBusIdSpan.textContent = this.busId || '--';
+                this.debugSessionSpan.textContent = this.authToken ? 'Active' : 'Demo';
+            }
+            
+            startTracking() {
+                if (!navigator.geolocation) {
+                    alert("Geolocation is not supported by your browser");
+                    return;
+                }
+                
+                this.isTracking = true;
+                document.getElementById('start-tracking').classList.add('hidden');
+                document.getElementById('stop-tracking').classList.remove('hidden');
+                this.trackingStatusSpan.textContent = 'ACTIVE';
+                this.trackingStatusSpan.className = 'active';
+                
+                // Request high accuracy location
+                const options = {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                };
+                
+                this.watchId = navigator.geolocation.watchPosition(
+                    (pos) => this.updateLocation(pos),
+                    (err) => this.handleLocationError(err),
+                    options
+                );
+                
+                // Regular updates every 10 seconds
+                this.trackingInterval = setInterval(() => this.updateLocation(), 10000);
+                
+                console.log('Tracking started');
+            }
+            
+            stopTracking() {
+                this.isTracking = false;
+                document.getElementById('start-tracking').classList.remove('hidden');
+                document.getElementById('stop-tracking').classList.add('hidden');
+                this.trackingStatusSpan.textContent = 'INACTIVE';
+                this.trackingStatusSpan.className = 'inactive';
+                
+                if (this.watchId) {
+                    navigator.geolocation.clearWatch(this.watchId);
+                    this.watchId = null;
+                }
+                
+                if (this.trackingInterval) {
+                    clearInterval(this.trackingInterval);
+                    this.trackingInterval = null;
+                }
+                
+                console.log('Tracking stopped');
+            }
+            
+            async updateLocation(position = null) {
+                if (!position) {
+                    // Get current position if not provided
+                    navigator.geolocation.getCurrentPosition(
+                        (pos) => this.updateLocation(pos),
+                        (err) => this.handleLocationError(err),
+                        { enableHighAccuracy: true, timeout: 5000 }
+                    );
+                    return;
+                }
+                
+                const coords = position.coords;
+                const now = new Date();
+                
+                // Update UI
+                this.currentLocationDiv.innerHTML = `
+                    Latitude: ${coords.latitude.toFixed(6)}<br>
+                    Longitude: ${coords.longitude.toFixed(6)}<br>
+                    Accuracy: ${coords.accuracy ? coords.accuracy.toFixed(0) : '--'} meters<br>
+                    Speed: ${coords.speed ? (coords.speed * 3.6).toFixed(1) : '0'} km/h
+                `;
+                
+                this.lastUpdateSpan.textContent = `Last update: ${now.toLocaleTimeString()}`;
+                
+                // Send to server if authenticated
+                if (this.authToken) {
+                    try {
+                        await this.apiRequest('update_location', {
+                            latitude: coords.latitude,
+                            longitude: coords.longitude,
+                            accuracy: coords.accuracy,
+                            speed: coords.speed
+                        });
+                        this.debugApiStatusSpan.textContent = 'Updated';
+                    } catch (error) {
+                        this.debugApiStatusSpan.textContent = 'Failed';
+                    }
+                }
+            }
+            
+            handleLocationError(error) {
+                const messages = {
+                    1: "Location permission denied. Please enable location access in browser settings.",
+                    2: "Location unavailable. Check your GPS connection.",
+                    3: "Location request timeout. Try again."
+                };
+                
+                alert("⚠️ " + (messages[error.code] || "Location error occurred."));
+                this.stopTracking();
+            }
+            
+            async updateBusStatus() {
+                const passengers = this.passengerSlider.value;
+                const status = document.getElementById('bus-status').value;
+                
+                try {
+                    if (this.authToken) {
+                        await this.apiRequest('update_bus_status', {
+                            passenger_count: passengers,
+                            status: status
+                        });
+                        alert('✅ Status updated successfully!');
+                    } else {
+                        alert(`✅ Demo: Updated to ${passengers} passengers, status: ${status}`);
+                    }
+                } catch (error) {
+                    alert('Status update failed');
+                }
+            }
+            
+            takeBreak() {
+                if (confirm('Take a 15-minute break? Tracking will pause.')) {
+                    this.stopTracking();
+                    alert('Break started. Tracking paused for 15 minutes.');
+                    
+                    setTimeout(() => {
+                        if (confirm('Break ended. Resume tracking?')) {
+                            this.startTracking();
+                        }
+                    }, 900000);
+                }
+            }
+            
+            endShift() {
+                if (confirm('End your shift? This will stop tracking and log you out.')) {
+                    this.stopTracking();
+                    this.clearSession();
+                    alert('Shift ended. Thank you for your service!');
+                    location.reload();
+                }
+            }
+            
+            clearSession() {
+                localStorage.removeItem('driver_token');
+                localStorage.removeItem('driver_id');
+                localStorage.removeItem('driver_name');
+                localStorage.removeItem('bus_no');
+                this.driverId = null;
+                this.busId = null;
+                this.driverName = null;
+                this.authToken = null;
+            }
+            
+            async testAPI() {
+                try {
+                    this.debugApiStatusSpan.textContent = 'Testing...';
+                    const response = await this.apiRequest('health');
+                    this.debugApiStatusSpan.textContent = response.success ? 'API OK' : 'API Error';
+                    alert(`API Test: ${response.success ? 'Connected' : 'Failed'}`);
+                } catch (error) {
+                    this.debugApiStatusSpan.textContent = 'No Connection';
+                    alert('API Test Failed: No connection to server');
+                }
+            }
+            
+            showConsole() {
+                console.log('=== WE TRACK DRIVER DEBUG INFO ===');
+                console.log('Driver:', this.driverName);
+                console.log('Driver ID:', this.driverId);
+                console.log('Bus:', this.busNo);
+                console.log('Bus ID:', this.busId);
+                console.log('Session:', this.authToken ? 'Authenticated' : 'Demo');
+                console.log('Tracking:', this.isTracking ? 'Active' : 'Inactive');
+                console.log('===============================');
+                alert('Debug information logged to console (Press F12)');
+            }
+            
+            setLoading(loading) {
+                this.loginBtn.disabled = loading;
+                this.loginBtn.textContent = loading ? 'Logging in...' : 'Login / Register';
+            }
+            
+            validatePhone(phone) {
+                return /^[0-9]{11}$/.test(phone);
+            }
+            
+            async apiRequest(action, data = null) {
+                const url = `${this.apiBase}?action=${action}`;
+                const options = {
+                    method: data ? 'POST' : 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                };
+                
+                if (this.authToken) {
+                    options.headers['Authorization'] = `Bearer ${this.authToken}`;
+                }
+                
+                if (data) {
+                    options.body = JSON.stringify(data);
+                }
+                
+                const response = await fetch(url, options);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                return await response.json();
+            }
+        }
+        
+        // Initialize app when DOM is loaded
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new DriverApp();
+            
+            // Check HTTPS requirement for geolocation
+            if (window.location.protocol !== 'https:' && !window.location.hostname.includes('localhost')) {
+                console.warn('Note: HTTPS is required for geolocation in modern browsers');
+            }
+            
+            // Test API connection on load
+            setTimeout(() => app.testAPI(), 1000);
+        });
+        
+        // Global functions for onclick handlers
+        function login() { app?.login(); }
+        function startTracking() { app?.startTracking(); }
+        function stopTracking() { app?.stopTracking(); }
+        function updateBusStatus() { app?.updateBusStatus(); }
+        function takeBreak() { app?.takeBreak(); }
+        function endShift() { app?.endShift(); }
+        function testAPI() { app?.testAPI(); }
+        function showConsole() { app?.showConsole(); }
+    </script>
+</body>
+</html>
