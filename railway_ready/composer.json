@@ -1,12 +1,7 @@
 {
-    "name": "wetrack/bus-system",
-    "description": "Karachi Bus Tracking System",
+    "name": "wetrack/karachi-bus",
     "type": "project",
     "require": {
         "php": ">=8.0"
-    },
-    "require-dev": {
-        "ext-mysqli": "*",
-        "ext-pdo": "*"
     }
 }
